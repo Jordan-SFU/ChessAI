@@ -6,6 +6,8 @@ class chessboard():
 
         self.white_points = 0
         self.black_points = 0
+        self.game_over = False
+        self.winner = None
 
     def set_piece(self, piece, position):
         self.board[position[0]][position[1]] = piece
@@ -67,48 +69,102 @@ class chesspiece():
             self.board.set_piece(0, self.position)
             self.position = position
             self.board.set_piece(self, position)
+            
+            # Check for promotion
+            if self.name == "pawn" and (position[0] == 0 or position[0] == 7):
+                self.promote()
+
             return True
         else:
             return False
         
     def check_if_valid(self, position):
-        # get relative position
+        # Check if the target position is within the bounds of the board
+        if not (0 <= position[0] < 8 and 0 <= position[1] < 8):
+            return False
+
+        # Get relative position
         relative_position = [position[0] - self.position[0], position[1] - self.position[1]]
 
-        # check if the tile is empty
+        # Check if the target tile is empty
         target_piece = self.board.get_piece(position)
 
-        # check if the movement is valid
+        # Check if the movement is valid
         if target_piece == 0:
+            # Check if there are obstructions along the movement path
             if self.color == "black":
                 if "move" in self.movement[relative_position[0] + 3][relative_position[1] + 3]:
-                    return True
-                else:
-                    return False
+                    if self.check_path_clear(position):
+                        return True
+                return False
             else:
-                # flip the board for black pieces
                 if "move" in self.movement[-relative_position[0] + 3][-relative_position[1] + 3]:
-                    return True
-                else:
-                    return False
+                    if self.check_path_clear(position):
+                        return True
+                return False
         else:
+            # Check if the movement is a valid attack
             if target_piece.color != self.color:
                 if self.color == "black":
                     if "attack" in self.movement[relative_position[0] + 3][relative_position[1] + 3]:
-                        print(f"{self.color} {self.name} attacked {target_piece.color} {target_piece.name}")
-                        board.black_points += 1
-                        return True
-                    else:
-                        return False
+                        if self.check_path_clear(position):
+                            print(f"{self.color} {self.name} attacked {target_piece.color} {target_piece.name}")
+                            if self.color == "black":
+                                self.board.black_points += 1
+                            else:
+                                self.board.white_points += 1
+
+                            # Check if the captured piece is a king
+                            if target_piece.name == "king":
+                                self.board.game_over = True
+                                self.board.winner = self.color
+
+                            return True
                 else:
                     if "attack" in self.movement[-relative_position[0] + 3][-relative_position[1] + 3]:
-                        print(f"{self.color} {self.name} attacked {target_piece.color} {target_piece.name}")
-                        board.white_points += 1
-                        return True
-                    else:
-                        return False
-            else:
+                        if self.check_path_clear(position):
+                            print(f"{self.color} {self.name} attacked {target_piece.color} {target_piece.name}")
+                            if self.color == "black":
+                                self.board.black_points += 1
+                            else:
+                                self.board.white_points += 1
+
+                            # Check if the captured piece is a king
+                            if target_piece.name == "king":
+                                self.board.game_over = True
+                                self.board.winner = self.color
+
+                            return True
+
+            return False
+
+    def check_path_clear(self, target_position):
+        # Get the direction of movement
+        delta_x = 1 if target_position[1] > self.position[1] else (-1 if target_position[1] < self.position[1] else 0)
+        delta_y = 1 if target_position[0] > self.position[0] else (-1 if target_position[0] < self.position[0] else 0)
+
+        # Traverse the path from current position to target position
+        x, y = self.position[1] + delta_x, self.position[0] + delta_y
+        while x != target_position[1] or y != target_position[0]:
+            if self.board.get_piece([y, x]) != 0:
                 return False
+            x += delta_x
+            y += delta_y
+        return True
+
+    def promote(self):
+        new_piece_name = input("Promote pawn to (queen/rook/bishop/knight): ").lower()
+        if new_piece_name not in ["queen", "rook", "bishop", "knight"]:
+            new_piece_name = "queen"
+        movements = {
+            "queen": queen_movement,
+            "rook": rook_movement,
+            "bishop": bishop_movement,
+            "knight": knight_movement
+        }
+        self.name = new_piece_name
+        self.movement = movements[new_piece_name]
+        print(f"Pawn promoted to {new_piece_name}")
 
 # Define movements for each piece using nested array
 pawn_movement = [
@@ -176,7 +232,7 @@ board.initialize_board()
 
 current_color = "black"
 
-while True:
+while not board.game_over:
     board.display_board()
 
     print("Current turn: ", current_color)
@@ -198,5 +254,9 @@ while True:
     if piece.move(move_pos) == False:
         print("Invalid movement")
         continue
+
+    if board.game_over:
+        print(f"Game over! {board.winner.capitalize()} wins!")
+        break
 
     current_color = "black" if current_color == "white" else "white"
