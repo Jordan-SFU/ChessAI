@@ -12,9 +12,17 @@
   }
   
   .dark {
-    background-color: #769656; /* Dark green typical of chess boards */
+  /* From https://css.glass */
+  background: rgba(0, 0, 0, 0.47);
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+  backdrop-filter: blur(16.1px);
+  -webkit-backdrop-filter: blur(16.1px);
   }
   
   .light {
-    background-color: #eeeed2; /* Light color typical of chess boards */
+  /* From https://css.glass */
+  background: rgba(255, 255, 255, 0.47);
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+  backdrop-filter: blur(16.1px);
+  -webkit-backdrop-filter: blur(16.1px);
   }

@@ -8,17 +8,18 @@ function App() {
 
     <div className="App">
       <header className="App-header">
-        <BrowserRouter>
-          <Routes>
-            <Route path="/" element={<Start />} />
-            <Route path="/chessboard" element={<Chessboard />} />
-          </Routes>
-        </BrowserRouter>
+        <div className="card">
+          <BrowserRouter>
+            <Routes>
+              <Route path="/" element={<Start />} />
+              <Route path="/chessboard" element={<Chessboard />} />
+            </Routes>
+          </BrowserRouter>
+        </div>
       </header>
       
     </div>
   );
 }
-
 
 export default App;

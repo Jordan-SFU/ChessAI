@@ -22,4 +22,39 @@
   justify-content: center;
   font-size: calc(10px + 2vmin);
   color: white;
+  height: 100%;
+  background: linear-gradient(290deg, #3f5efb, #fc466b, #1533c5, #f11843);
+  background-size: 240% 240%;
+  animation: gradient-animation 15s ease infinite;
 }
+
+@keyframes gradient-animation {
+  0% {
+      background-position: 0% 50%;
+  }
+  50% {
+      background-position: 100% 50%;
+  }
+  100% {
+      background-position: 0% 50%;
+  }
+}
+
+.card { 
+  width: 95vw; 
+  height: 90vh;
+  /* From https://css.glass */
+  background: rgba(255, 255, 255, 0.21);
+  border-radius: 16px;
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+  backdrop-filter: blur(7.3px);
+  -webkit-backdrop-filter: blur(7.3px);
+  border: 1px solid rgba(255, 255, 255, 0.22); 
+  /*dsad*/
+  padding: 10px; 
+  align-items: center;
+  text-align: center; 
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+} 
