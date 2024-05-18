@@ -16,7 +16,7 @@ const Start = () => {
       <p className="description">Created by Jordan Mckenzie, Riley Su, Nick Chan, and Bjorn Flamminman</p>
       <div className="button-container">
       <button class="cssbuttons-io-button" onClick = {handleButtonOnClick}>
-        Play
+        Play!
         <div class="icon">
           <svg
             height="24"
