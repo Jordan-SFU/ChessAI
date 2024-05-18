@@ -1,13 +1,21 @@
 import React from 'react';
+import { useNavigate} from "react-router-dom";
 import './Start.css'; // Import CSS for styling
 
 const Start = () => {
+
+    const navigate = useNavigate();
+    const handleButtonOnClick = () => {
+        navigate('/chessboard');
+    };
+
+
   return (
     <div className="start">
       <h1 className="title">Chess AI</h1>
       <p className="description">Created by Jordan Mckenzie, Riley Su, Nick Chan, and Bjorn Flamminman</p>
       <div className="button-container">
-      <button class="cssbuttons-io-button">
+      <button class="cssbuttons-io-button" onClick = {handleButtonOnClick}>
         Play
         <div class="icon">
           <svg
