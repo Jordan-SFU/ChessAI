@@ -4,6 +4,9 @@ class chessboard():
         self.letter_to_index = {chr(i+65): i for i in range(8)}
         self.index_to_letter = {i: chr(i+65) for i in range(8)}
 
+        self.white_points = 0
+        self.black_points = 0
+
     def set_piece(self, piece, position):
         self.board[position[0]][position[1]] = piece
 
@@ -72,16 +75,38 @@ class chesspiece():
         # get relative position
         relative_position = [position[0] - self.position[0], position[1] - self.position[1]]
 
+        # check if the tile is empty
+        target_piece = self.board.get_piece(position)
+
         # check if the movement is valid
-        if self.color == "black":
-            if self.movement[relative_position[0] + 3][relative_position[1] + 3] == ["move"]:
-                return True
+        if target_piece == 0:
+            if self.color == "black":
+                if "move" in self.movement[relative_position[0] + 3][relative_position[1] + 3]:
+                    return True
+                else:
+                    return False
             else:
-                return False
+                # flip the board for black pieces
+                if "move" in self.movement[-relative_position[0] + 3][-relative_position[1] + 3]:
+                    return True
+                else:
+                    return False
         else:
-            # flip the board for black pieces
-            if self.movement[-relative_position[0] + 3][-relative_position[1] + 3] == ["move"]:
-                return True
+            if target_piece.color != self.color:
+                if self.color == "black":
+                    if "attack" in self.movement[relative_position[0] + 3][relative_position[1] + 3]:
+                        print(f"{self.color} {self.name} attacked {target_piece.color} {target_piece.name}")
+                        board.black_points += 1
+                        return True
+                    else:
+                        return False
+                else:
+                    if "attack" in self.movement[-relative_position[0] + 3][-relative_position[1] + 3]:
+                        print(f"{self.color} {self.name} attacked {target_piece.color} {target_piece.name}")
+                        board.white_points += 1
+                        return True
+                    else:
+                        return False
             else:
                 return False
 
@@ -89,7 +114,7 @@ class chesspiece():
 pawn_movement = [
     [[], [], [], [], [], [], []],
     [[], [], [], [], [], [], []],
-    [[], [], [], ["move"], [], [], []],
+    [[], [], ["attack"], ["move"], ["attack"], [], []],
     [[], [], [], [], [], [], []],
     [[], [], [], [], [], [], []],
     [[], [], [], [], [], [], []],
@@ -97,13 +122,13 @@ pawn_movement = [
 ]
 
 rook_movement = [
-    [["move"], ["move"], ["move"], ["move"], ["move"], ["move"], ["move"]],
-    [["move"], ["move"], ["move"], ["move"], ["move"], ["move"], ["move"]],
-    [["move"], ["move"], ["move"], ["move"], ["move"], ["move"], ["move"]],
-    [["move"], ["move"], ["move"], ["move"], ["move"], ["move"], ["move"]],
-    [["move"], ["move"], ["move"], ["move"], ["move"], ["move"], ["move"]],
-    [["move"], ["move"], ["move"], ["move"], ["move"], ["move"], ["move"]],
-    [["move"], ["move"], ["move"], ["move"], ["move"], ["move"], ["move"]],
+    [["move"], ["move"], ["move"], ["move", "attack"], ["move"], ["move"], ["move"]],
+    [["move"], ["move"], ["move"], ["move", "attack"], ["move"], ["move"], ["move"]],
+    [["move"], ["move"], ["move"], ["move", "attack"], ["move"], ["move"], ["move"]],
+    [["move"], ["move"], ["move"], [], ["move"], ["move"], ["move"]],
+    [["move"], ["move"], ["move"], ["move", "attack"], ["move"], ["move"], ["move"]],
+    [["move"], ["move"], ["move"], ["move", "attack"], ["move"], ["move"], ["move"]],
+    [["move"], ["move"], ["move"], ["move", "attack"], ["move"], ["move"], ["move"]],
 ]
 
 knight_movement = [
@@ -150,10 +175,14 @@ board = chessboard()
 board.initialize_board()
 
 current_color = "black"
+
 while True:
     board.display_board()
 
     print("Current turn: ", current_color)
+    print("Black points: ", board.black_points)
+    print("White points: ", board.white_points)
+    print("")
     piece_pos = input("Enter piece position (e.g., B2): ")
     piece_pos = board.convert_position(piece_pos)
 
