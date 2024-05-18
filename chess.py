@@ -178,33 +178,33 @@ pawn_movement = [
 ]
 
 rook_movement = [
-    [["move"], ["move"], ["move"], ["move", "attack"], ["move"], ["move"], ["move"]],
-    [["move"], ["move"], ["move"], ["move", "attack"], ["move"], ["move"], ["move"]],
-    [["move"], ["move"], ["move"], ["move", "attack"], ["move"], ["move"], ["move"]],
+    [[], [], [], ["move", "attack"], [], [], []],
+    [[], [], [], ["move", "attack"], [], [], []],
+    [[], [], [], ["move", "attack"], [], [], []],
     [["move"], ["move"], ["move"], [], ["move"], ["move"], ["move"]],
-    [["move"], ["move"], ["move"], ["move", "attack"], ["move"], ["move"], ["move"]],
-    [["move"], ["move"], ["move"], ["move", "attack"], ["move"], ["move"], ["move"]],
-    [["move"], ["move"], ["move"], ["move", "attack"], ["move"], ["move"], ["move"]],
+    [[], [], [], ["move", "attack"], [], [], []],
+    [[], [], [], ["move", "attack"], [], [], []],
+    [[], [], [], ["move", "attack"], [], [], []],
 ]
 
 knight_movement = [
     [[], [], [], [], [], [], []],
-    [[], [], ["move"], [], ["move"], [], []],
-    [[], ["move"], [], [], [], ["move"], []],
+    [[], [], ["move", "attack"], [], ["move", "attack"], [], []],
+    [[], ["move", "attack"], [], [], [], ["move", "attack"], []],
     [[], [], [], [], [], [], []],
-    [[], ["move"], [], [], [], ["move"], []],
-    [[], [], ["move"], [], ["move"], [], []],
+    [[], ["move", "attack"], [], [], [], ["move", "attack"], []],
+    [[], [], ["move", "attack"], [], ["move", "attack"], [], []],
     [[], [], [], [], [], [], []]
 ]
 
 bishop_movement = [
-    [["move"], [], [], [], [], [], ["move"]],
-    [[], ["move"], [], [], [], ["move"], []],
-    [[], [], ["move"], [], ["move"], [], []],
+    [["move", "attack"], [], [], [], [], [], ["move", "attack"]],
+    [[], ["move", "attack"], [], [], [], ["move", "attack"], []],
+    [[], [], ["move", "attack"], [], ["move", "attack"], [], []],
     [[], [], [], [], [], [], []],
-    [[], [], ["move"], [], ["move"], [], []],
-    [[], ["move"], [], [], [], ["move"], []],
-    [["move"], [], [], [], [], [], ["move"]],
+    [[], [], ["move", "attack"], [], ["move", "attack"], [], []],
+    [[], ["move", "attack"], [], [], [], ["move", "attack"], []],
+    [["move", "attack"], [], [], [], [], [], ["move", "attack"]],
 ]
 
 queen_movement = [
@@ -220,9 +220,9 @@ queen_movement = [
 king_movement = [
     [[], [], [], [], [], [], []],
     [[], [], [], [], [], [], []],
-    [[], [], ["move"], ["move"], ["move"], [], []],
-    [[], [], ["move"], [], ["move"], [], []],
-    [[], [], ["move"], ["move"], ["move"], [], []],
+    [[], [], ["move", "attack"], ["move", "attack"], ["move", "attack"], [], []],
+    [[], [], ["move", "attack"], [], ["move", "attack"], [], []],
+    [[], [], ["move", "attack"], ["move", "attack"], ["move", "attack"], [], []],
     [[], [], [], [], [], [], []],
     [[], [], [], [], [], [], []],
 ]
