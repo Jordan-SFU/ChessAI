@@ -17,9 +17,18 @@ function App() {
         >
           Learn React
         </a>
+        {banana()}
       </header>
     </div>
   );
+}
+
+function banana() {
+  return (
+    <p>
+      banana
+    </p>
+  )
 }
 
 export default App;
