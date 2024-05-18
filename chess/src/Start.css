@@ -1,0 +1,19 @@
+.start-screen {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  background-color: #282c34;
+  color: white;
+  text-align: center;
+}
+
+.title {
+  font-size: 3em;
+  margin-bottom: 0.5em;
+}
+
+.description {
+  font-size: 1.5em;
+}
