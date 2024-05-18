@@ -4,11 +4,11 @@ import './Start.css'; // Import CSS for styling
 const Start = () => {
   return (
     <div className="start">
-      <h1 className="title">Welcome to Our Hackathon Project</h1>
-      <p className="description">This is a brief description of our awesome AI project!</p>
+      <h1 className="title">Chess AI</h1>
+      <p className="description">Created by Jordan Mckenzie, Riley Su, Nick Chan, and Bjorn Flamminman</p>
       <div className="button-container">
       <button class="cssbuttons-io-button">
-        Get started
+        Play
         <div class="icon">
           <svg
             height="24"
