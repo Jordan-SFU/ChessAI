@@ -169,8 +169,7 @@ class chesspiece():
 
                 case _: 
                     print ("invalid move") 
-                    return False
-        return True
+        return False
 
 
 
