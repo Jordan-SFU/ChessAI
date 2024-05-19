@@ -1,3 +1,21 @@
+@font-face {
+  font-family: 'Poppins';
+  src: url('./components/Fonts/Poppins/Poppins-Bold.ttf') format('truetype');
+  font-weight: bold;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Poppins-light';
+  src: url('./components/Fonts/Poppins/Poppins-Medium.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+
+body {
+  font-family: 'Poppins', sans-serif;
+}
+
 .App {
   text-align: center;
 }
@@ -46,7 +64,8 @@
   /* From https://css.glass */
   background: rgba(255, 255, 255, 0.21);
   border-radius: 16px;
-  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.3);
+  transition: box-shadow 0.3s ease-in-out;
   backdrop-filter: blur(7.3px);
   -webkit-backdrop-filter: blur(7.3px);
   border: 1px solid rgba(255, 255, 255, 0.22); 
@@ -56,5 +75,6 @@
   text-align: center; 
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  justify-content: center;   
 } 
+

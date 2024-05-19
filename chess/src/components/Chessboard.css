@@ -1,9 +1,9 @@
 .chessboard {
     display: grid;
-    grid-template-columns: repeat(8, 50px); /* Adjust size as needed */
-    grid-template-rows: repeat(8, 50px);
-    width: 400px; /* Adjust size as needed */
-    height: 400px; /* Adjust size as needed */
+    grid-template-columns: repeat(8, 60px); /* Adjust size as needed */
+    grid-template-rows: repeat(8, 60px);
+    width: 480px; /* Adjust size as needed */
+    height: 480px; /* Adjust size as needed */
     box-shadow: 0px 8px 15px rgba(0, 0, 0, 0.3); /* Horizontal, vertical offsets, blur radius, and color */
     transition: box-shadow 0.3s ease-in-out;
   }
@@ -15,7 +15,7 @@
   
   .dark {
   /* From https://css.glass */
-  background: rgba(0, 0, 0, 0.47);
+  background: rgba(6, 107, 98, 0.47);
   box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
   backdrop-filter: blur(16.1px);
   -webkit-backdrop-filter: blur(16.1px);
@@ -28,3 +28,25 @@
   backdrop-filter: blur(16.1px);
   -webkit-backdrop-filter: blur(16.1px);
   }
+
+.pause-button {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    width: 40px;
+    height: 40px;
+    background-color: dimgrey;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 22px;
+    font-weight: bold;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.pause-button:hover {
+    background-color: darkgray;
+}

@@ -18,24 +18,24 @@ class chessboard():
     def initialize_board(self):
         # Initialize white pieces
         self.set_piece(chesspiece("rook", "white", [0, 0], rook_movement, self), [0, 0])
-        self.set_piece(chesspiece("knight", "white", [0, 1], knight_movement, self), [0, 1])
+        self.set_piece(chesspiece("night", "white", [0, 1], knight_movement, self), [0, 1])
         self.set_piece(chesspiece("bishop", "white", [0, 2], bishop_movement, self), [0, 2])
         self.set_piece(chesspiece("queen", "white", [0, 3], queen_movement, self), [0, 3])
         self.set_piece(chesspiece("king", "white", [0, 4], king_movement, self), [0, 4])
         self.set_piece(chesspiece("bishop", "white", [0, 5], bishop_movement, self), [0, 5])
-        self.set_piece(chesspiece("knight", "white", [0, 6], knight_movement, self), [0, 6])
+        self.set_piece(chesspiece("night", "white", [0, 6], knight_movement, self), [0, 6])
         self.set_piece(chesspiece("rook", "white", [0, 7], rook_movement, self), [0, 7])
         for i in range(8):
             self.set_piece(chesspiece("pawn", "white", [1, i], pawn_movement, self), [1, i])
 
         # Initialize black pieces
         self.set_piece(chesspiece("rook", "black", [7, 0], rook_movement, self), [7, 0])
-        self.set_piece(chesspiece("knight", "black", [7, 1], knight_movement, self), [7, 1])
+        self.set_piece(chesspiece("night", "black", [7, 1], knight_movement, self), [7, 1])
         self.set_piece(chesspiece("bishop", "black", [7, 2], bishop_movement, self), [7, 2])
         self.set_piece(chesspiece("queen", "black", [7, 3], queen_movement, self), [7, 3])
         self.set_piece(chesspiece("king", "black", [7, 4], king_movement, self), [7, 4])
         self.set_piece(chesspiece("bishop", "black", [7, 5], bishop_movement, self), [7, 5])
-        self.set_piece(chesspiece("knight", "black", [7, 6], knight_movement, self), [7, 6])
+        self.set_piece(chesspiece("night", "black", [7, 6], knight_movement, self), [7, 6])
         self.set_piece(chesspiece("rook", "black", [7, 7], rook_movement, self), [7, 7])
         for i in range(8):
             self.set_piece(chesspiece("pawn", "black", [6, i], pawn_movement, self), [6, i])
@@ -50,6 +50,9 @@ class chessboard():
                 else:
                     print(self.get_piece([i, j]).name[0], end=" ")  # Display first letter of piece name
             print("")
+
+    def get_board_state(self):
+        return self.board
 
     def convert_position(self, pos):
         letter, number = pos[0], pos[1]
@@ -300,8 +303,11 @@ king_movement = [
     [[], [], [], [], [], [], []],
 ]
 
+
 board = chessboard()
 board.initialize_board()
+
+print(board.get_board_state())
 
 current_color = "black"
 
