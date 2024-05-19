@@ -6,7 +6,7 @@ const Start = () => {
 
     const navigate = useNavigate();
     const handleButtonOnClick = () => {
-        navigate('/chessboard');
+        navigate('/play');
     };
 
 
