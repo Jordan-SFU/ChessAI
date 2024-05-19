@@ -47,9 +47,11 @@ function Menu() {
       <div className="chessboard">
         <div
           style={{
-            margin: '3rem auto',
-            maxWidth: '70vh',
-            width: '70vw'
+            width: "50vh",
+            height: "50vh",
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
           }}
         >
           <Chessboard
