@@ -74,7 +74,7 @@ function Menu() {
   };
 
   // Define movements for each piece using nested array
-  var pawn_movement = [
+  var pawn_movement = extendMovementArray([
     [[], [], [], [], [], [], []],
     [[], [], [], ["first_move"], [], [], []],
     [[], [], ["capture"], ["move"], ["capture"], [], []],
@@ -82,9 +82,9 @@ function Menu() {
     [[], [], [], [], [], [], []],
     [[], [], [], [], [], [], []],
     [[], [], [], [], [], [], []],
-]
+]);
 
-var rook_movement = [
+var rook_movement = extendMovementArray([
     [[], [], [], ["move", "capture"], [], [], []],
     [[], [], [], ["move", "capture"], [], [], []],
     [[], [], [], ["move", "capture"], [], [], []],
@@ -92,9 +92,9 @@ var rook_movement = [
     [[], [], [], ["move", "capture"], [], [], []],
     [[], [], [], ["move", "capture"], [], [], []],
     [[], [], [], ["move", "capture"], [], [], []],
-]
+]);
 
-var knight_movement = [
+var knight_movement = extendMovementArray([
     [[], [], [], [], [], [], []],
     [[], [], ["move", "capture"], [], ["move", "capture"], [], []],
     [[], ["move", "capture"], [], [], [], ["move", "capture"], []],
@@ -102,9 +102,9 @@ var knight_movement = [
     [[], ["move", "capture"], [], [], [], ["move", "capture"], []],
     [[], [], ["move", "capture"], [], ["move", "capture"], [], []],
     [[], [], [], [], [], [], []]
-]
+]);
 
-var bishop_movement = [
+var bishop_movement = extendMovementArray([
     [["move", "capture"], [], [], [], [], [], ["move", "capture"]],
     [[], ["move", "capture"], [], [], [], ["move", "capture"], []],
     [[], [], ["move", "capture"], [], ["move", "capture"], [], []],
@@ -112,9 +112,9 @@ var bishop_movement = [
     [[], [], ["move", "capture"], [], ["move", "capture"], [], []],
     [[], ["move", "capture"], [], [], [], ["move", "capture"], []],
     [["move", "capture"], [], [], [], [], [], ["move", "capture"]],
-]
+]);
 
-var queen_movement = [
+var queen_movement = extendMovementArray([
     [["move", "capture"], [], [], ["move", "capture"], [], [], ["move", "capture"]],
     [[], ["move", "capture"], [], ["move", "capture"], [], ["move", "capture"], []],
     [[], [], ["move", "capture"], ["move", "capture"], ["move", "capture"], [], []],
@@ -122,9 +122,9 @@ var queen_movement = [
     [[], [], ["move", "capture"], ["move", "capture"], ["move", "capture"], [], []],
     [[], ["move", "capture"], [], ["move", "capture"], [], ["move", "capture"], []],
     [["move", "capture"], [], [], ["move", "capture"], [], [], ["move", "capture"]],
-]
+]);
 
-var king_movement = [
+var king_movement = extendMovementArray([
     [[], [], [], [], [], [], []],
     [[], [], [], [], [], [], []],
     [[], [], ["move", "capture"], ["move", "capture"], ["move", "capture"], [], []],
@@ -132,7 +132,7 @@ var king_movement = [
     [[], [], ["move", "capture"], ["move", "capture"], ["move", "capture"], [], []],
     [[], [], [], [], [], [], []],
     [[], [], [], [], [], [], []],
-]
+]);
 
 // class structure
 class chessboard {
@@ -239,8 +239,8 @@ class chesspiece {
     var x = this.position[1] + dx;
     var y = this.position[0] + dy;
 
-    // return true if the path is not completely diagonal
-    if (relx != rely && relx != -rely) {
+    // only return true if the path is not completely diagonal, vertical, or horizontal
+    if (relx != rely && relx != -rely && relx != 0 && rely != 0) {
       return true;
     }
 
@@ -267,12 +267,12 @@ class chesspiece {
     var target_piece = this.board.get_piece(position[0]);
 
     // check if the target pos is within the movement pattern
-    if (rel_pos[0] + 3 < 0 || rel_pos[0] + 3 > 6 || rel_pos[1] + 3 < 0 || rel_pos[1] + 3 > 6) {
+    if (rel_pos[0] + 7 < 0 || rel_pos[0] + 7 > 15 || rel_pos[1] + 7 < 0 || rel_pos[1] + 7 > 15) {
       return false;
     }
 
-    for (var moveType of this.movement[rel_pos[0] + 3][rel_pos[1] + 3]) {
-      console.log(this.movement[rel_pos[0] + 3][rel_pos[1] + 3]);
+    for (var moveType of this.movement[rel_pos[0] + 7][rel_pos[1] + 7]) {
+      console.log(this.movement[rel_pos[0] + 7][rel_pos[1] + 7]);
       switch (moveType) {
         case "capture":
           console.log("attempting capture")
@@ -280,6 +280,8 @@ class chesspiece {
             console.log(`${this.color} ${this.name} captures ${target_piece.color} ${target_piece.name} at ${position}`);
             this.move(position[0]);
             target_piece.captured = true;
+
+            this.first_move = false;
             return true;
           }
           continue;
@@ -289,6 +291,8 @@ class chesspiece {
             console.log(`${this.color} ${this.name} attacks ${target_piece.color} ${target_piece.name} at ${position}`);
             this.board.set_piece(null, position[0]);
             target_piece.captured = true;
+
+            this.first_move = false;
             
             return true;
           }
@@ -298,6 +302,8 @@ class chesspiece {
           if (target_piece == null && this.check_path_clear(position[0])) {
             console.log(`${this.color} ${this.name} moves to ${position[0]}`);
             this.move(position[0]);
+
+            this.first_move = false;
 
             return true;
           }
@@ -382,6 +388,22 @@ function onPieceDragBegin(piece, square) {
     return `${num_dict[position[1]]}${position[0] + 1}`;
   }
 
+  function extendMovementArray(movementArray) {
+    // Method for dynamically converting 7x7 movement array to 15x15, keeping the center 7x7 the same
+    var newMovementArray = Array(15).fill(null).map(() => Array(15).fill([])); // Initialize with empty arrays instead of null
+  
+    // if the outer edges of the 7x7 movement array aren't empty, (cardinal and diagonal only) then extend the 16x16 movement array and fill in the outer edges to simulate an infinite board
+    for (var i = 0; i < 15; i++) {
+      for (var j = 0; j < 15; j++) {
+        if (i >= 4 && i <= 10 && j >= 4 && j <= 10) {
+          newMovementArray[i][j] = movementArray[i - 4][j - 4];
+        }
+      }
+    }
+
+    return newMovementArray;
+  }
+
   function calculateValidMoves(piece) {
     // NOTE -> reversed y dir for white: fix later
 
@@ -398,8 +420,8 @@ function onPieceDragBegin(piece, square) {
             rowIndex = -rowIndex;
           }
 
-          const targetRow = piece.position[0] + rowIndex - 3; // Adjusting for offset
-          const targetCol = piece.position[1] + colIndex - 3; // Adjusting for offset
+          const targetRow = piece.position[0] + rowIndex - 7; // Adjusting for offset
+          const targetCol = piece.position[1] + colIndex - 7; // Adjusting for offset
           const targetPos = [targetRow, targetCol];
 
           if(targetRow < 0 || targetRow > 7 || targetCol < 0 || targetCol > 7) return;
