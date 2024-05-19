@@ -35,7 +35,11 @@
     right: 10px;
     width: 40px;
     height: 40px;
-    background-color: dimgrey;
+    /* From https://css.glass */
+    background: rgba(6, 107, 98, 0.47);
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+    backdrop-filter: blur(16.1px);
+    -webkit-backdrop-filter: blur(16.1px);
     color: white;
     border: none;
     border-radius: 8px;
@@ -48,5 +52,6 @@
 }
 
 .pause-button:hover {
+    transition: background-color 0.1s ease-in-out;
     background-color: darkgray;
 }
