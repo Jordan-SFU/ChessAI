@@ -1,13 +1,24 @@
-import React from 'react';
+import React, {useState} from 'react';
 import { useNavigate} from "react-router-dom";
 import './Start.css'; // Import CSS for styling
+import PieceSettingsModal from './PieceSettingsModal';
 
 const Start = () => {
 
+    const [isPieceSettingsOpen, setIsPieceSettingsOpen] = useState(false);
     const navigate = useNavigate();
-    const handleButtonOnClick = () => {
+
+    const handlePlayButtonClick = () => {
+        setIsPieceSettingsOpen(true);
+    };
+
+
+
+    const handleStartGame = () => {
+        setIsPieceSettingsOpen(false);
         navigate('/play');
     };
+
 
 
   return (
@@ -17,7 +28,7 @@ const Start = () => {
           <h1 className="title">Death by Chess</h1>
         </div>
         <div className="button-container">
-        <button class="cssbuttons-io-button" onClick = {handleButtonOnClick}>
+        <button class="cssbuttons-io-button" onClick = {handlePlayButtonClick}>
           Feel the Pain 
           <div class="icon">
             <svg
@@ -34,6 +45,14 @@ const Start = () => {
             </svg>
           </div>
         </button>
+
+            <PieceSettingsModal
+                isOpen={isPieceSettingsOpen}
+                onClose={() => setIsPieceSettingsOpen(false)}
+                onStart={handleStartGame}
+            />
+
+
       </div>
     </div>
   );
