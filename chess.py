@@ -319,33 +319,33 @@ print(board.get_board_state())
 
 current_color = "black"
 
-while not board.game_over:
-    board.display_board()
+# while not board.game_over:
+#     board.display_board()
 
-    print("Current turn: ", current_color)
-    print("Turn #: ", board.get_turn_count())
-    print("Black points: ", board.black_points)
-    print("White points: ", board.white_points)
-    print("")
-    piece_pos = input("Enter piece position (e.g., B2): ")
-    piece_pos = board.convert_position(piece_pos)
+#     print("Current turn: ", current_color)
+#     print("Turn #: ", board.get_turn_count())
+#     print("Black points: ", board.black_points)
+#     print("White points: ", board.white_points)
+#     print("")
+#     piece_pos = input("Enter piece position (e.g., B2): ")
+#     piece_pos = board.convert_position(piece_pos)
 
-    piece = board.get_piece(piece_pos)
-    # check if the piece is the correct color
-    if piece == 0 or piece.color != current_color or piece.stunned == True:
-        print("Invalid piece")
-        continue
+#     piece = board.get_piece(piece_pos)
+#     # check if the piece is the correct color
+#     if piece == 0 or piece.color != current_color or piece.stunned == True:
+#         print("Invalid piece")
+#         continue
 
-    move_pos = input("Enter move position (e.g., C3): ")
-    move_pos = board.convert_position(move_pos)
+#     move_pos = input("Enter move position (e.g., C3): ")
+#     move_pos = board.convert_position(move_pos)
 
-    if piece.move(move_pos) == False:
-        print("Invalid movement")
-        continue
+#     if piece.move(move_pos) == False:
+#         print("Invalid movement")
+#         continue
 
-    if board.game_over:
-        print(f"Game over! {board.winner.capitalize()} wins!")
-        break
+#     if board.game_over:
+#         print(f"Game over! {board.winner.capitalize()} wins!")
+#         break
 
-    board.turn_count += 1
-    current_color = "black" if current_color == "white" else "white"
+#     board.turn_count += 1
+#     current_color = "black" if current_color == "white" else "white"
