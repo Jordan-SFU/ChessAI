@@ -64,7 +64,7 @@ function Menu() {
       [[], [], [], ["move", "capture"], [], [], []],
       [[], [], [], ["move", "capture"], [], [], []],
       [[], [], [], ["move", "capture"], [], [], []],
-      [["move"], ["move"], ["move"], [], ["move"], ["move"], ["move"]],
+      [["move", "capture"], ["move", "capture"], ["move", "capture"], [], ["move", "capture"], ["move", "capture"], ["move", "capture"]],
       [[], [], [], ["move", "capture"], [], [], []],
       [[], [], [], ["move", "capture"], [], [], []],
       [[], [], [], ["move", "capture"], [], [], []],
@@ -114,6 +114,8 @@ function Menu() {
   class chessboard {
     constructor() {
       this.board = Array(8).fill(null).map(() => Array(8).fill(null));
+
+      this.current_turn = "white";
     }
 
     initialize() {
@@ -159,7 +161,12 @@ function Menu() {
         for (var j = 0; j < 8; j++) {
           var piece = this.board[i][j];
           if (piece != null) {
-            board_dict[convertPositionToSquare([i, j])] = piece.color[0] + piece.name[0].toUpperCase();
+            // check for king vs knight for naming
+            var name = piece.name;
+            if (name == "knight") {
+              name = "n";
+            }
+            board_dict[convertPositionToSquare([i, j])] = piece.color[0] + name[0].toUpperCase();
           }
         }
       }
@@ -192,9 +199,17 @@ function Menu() {
     check_path_clear(target_pos) {
       var dx = target_pos[1] > this.position[1] ? 1 : target_pos[1] < this.position[1] ? -1 : 0;
       var dy = target_pos[0] > this.position[0] ? 1 : target_pos[0] < this.position[0] ? -1 : 0;
+
+      var relx = target_pos[1] - this.position[1];
+      var rely = target_pos[0] - this.position[0];
     
       var x = this.position[1] + dx;
       var y = this.position[0] + dy;
+
+      // return true if the path is not completely diagonal
+      if (relx != rely && relx != -rely) {
+        return true;
+      }
   
       while (x != target_pos[1] || y != target_pos[0]) {
         if (this.board.get_piece([y, x]) != null) {
@@ -224,15 +239,15 @@ function Menu() {
           case "capture":
             console.log("attempting capture")
             if (target_piece != null && target_piece.color != this.color && this.check_path_clear(position[0])) {
-              console.log("{this.color} {this.name} captures {target_piece.color} {target_piece.name} at {position}");
-              this.move(position);
+              console.log(`${this.color} ${this.name} captures ${target_piece.color} ${target_piece.name} at ${position}`);
+              this.move(position[0]);
               return true;
             }
             continue;
           case "attack":
             console.log("attempting attack")
             if (target_piece != null && this.check_path_clear(position[0])) {
-              console.log("{this.color} {this.name} attacks {target_piece.color} {target_piece.name} at {position}");
+              console.log(`${this.color} ${this.name} attacks ${target_piece.color} ${target_piece.name} at ${position}`);
               this.board.set_piece(null, position[0]);
               return true;
             }
@@ -277,7 +292,11 @@ function Menu() {
 
     var boardPiece = board.get_piece(convertSquareToPosition(fromSquare));
 
-    boardPiece.tileable([convertSquareToPosition(toSquare)]);
+    if (boardPiece && boardPiece.color === board.current_turn) {
+      if(boardPiece.tileable([convertSquareToPosition(toSquare)])){
+        board.current_turn = board.current_turn === "white" ? "black" : "white";
+      }
+    }
   }
 
   // Helper functions
@@ -320,9 +339,17 @@ function Menu() {
     piece.movement.forEach((row, rowIndex) => {
       row.forEach((moveTypes, colIndex) => {
         moveTypes.forEach((moveType) => {
+
+          // flip y direction for white
+          if (piece.color === "white") {
+            rowIndex = -rowIndex;
+          }
+
           const targetRow = piece.position[0] + rowIndex - 3; // Adjusting for offset
           const targetCol = piece.position[1] + colIndex - 3; // Adjusting for offset
           const targetPos = [targetRow, targetCol];
+
+          if(targetRow < 0 || targetRow > 7 || targetCol < 0 || targetCol > 7) return;
   
           if (moveType === "move" && piece.check_path_clear(targetPos)) {
             validMoves.push(convertPositionToSquare(targetPos));
@@ -374,6 +401,7 @@ function Menu() {
             onPromotionPieceSelect={function noRefCheck(){}}
             onSquareClick={function noRefCheck(){}}
             onSquareRightClick={function noRefCheck(){}}
+            snapToCursor={false}
             customSquareStyles={moveSquares}
           />
         )}
