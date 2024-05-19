@@ -122,7 +122,11 @@ class chesspiece():
                             # Get the direction of movement
                             delta_x = 1 if position[1] > self.position[1] else (-1 if position[1] < self.position[1] else 0)
                             delta_y = 1 if position[0] > self.position[0] else (-1 if position[0] < self.position[0] else 0)
-                            target_piece.move([position[0] + delta_y, position[1] + delta_x])
+                            
+                            # check if the target push position is within the bounds of the board, and if the target push position is empty
+                            if 0 <= position[0] + delta_y < 8 and 0 <= position[1] + delta_x < 8 and self.board.get_piece([position[0] + delta_y, position[1] + delta_x]) == 0:
+                                target_piece.move([position[0] + delta_y, position[1] + delta_x])
+                                self.move(position)
 
                 case "shield":
                     pass
