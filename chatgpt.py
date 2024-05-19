@@ -1,6 +1,10 @@
 import openai
+import os
+
+#open environment variables
 
 API_KEY = open("apikey.txt", "r").read().strip()
+
 openai.api_key = API_KEY
 
 class chatManager:
@@ -20,14 +24,17 @@ class chatManager:
             [[], [], [], [], [], [], []],
             [[], [], [], [], [], [], []],
             ]
+
                        
-            this is the thing you must turn into a chess piece: ''' + user_input}],
+            This array is centered on the chesspiece, and shows what actions it can take on which adjacent tiles.
+            Do not include any other writing or explanations in your response, only the proper format.    
+            This is the thing you must turn into a chess piece: ''' + user_input}],
         )
 
         return response.choices[0].message["content"]
 
 # Example usage:
 chat_manager = chatManager()
-user_input = "thermonuclear bomb"
+user_input = "fly"
 response_content = chat_manager.send_message(user_input)
 print(response_content)
