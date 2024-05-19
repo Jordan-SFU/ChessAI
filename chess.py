@@ -62,6 +62,7 @@ class chesspiece():
         self.position = position
         self.movement = movement
         self.board = board
+        self.stunned = False
 
     def move(self, position):
         # update position on board
@@ -91,7 +92,7 @@ class chesspiece():
                                 self.board.black_points += 1
                             else:
                                 self.board.white_points += 1
-                            self.move(position);
+                            self.move(position)
                             
                 case "attack":
                     if target_piece.color == ("black" if self.color == "white" else "white"):
@@ -104,16 +105,33 @@ class chesspiece():
                             self.board.set_piece(0, self.position)
                 
                 case "swap":
+                    if target_piece != 0:
+                        if self.check_path_clear(position):
+                            prev_position = self.position
+                            self.move(position)
+                            target_piece.move(prev_position)
 
                 case "stun":
+                    if target_piece != 0:
+                        if self.check_path_clear(position):
+                            target_piece.stunned = True
 
                 case "push":
+                    if target_piece != 0 and target_piece.color != self.color:
+                        if self.check_path_clear(position):
+                            # Get the direction of movement
+                            delta_x = 1 if position[1] > self.position[1] else (-1 if position[1] < self.position[1] else 0)
+                            delta_y = 1 if position[0] > self.position[0] else (-1 if position[0] < self.position[0] else 0)
+                            target_piece.move([position[0] + delta_y, position[1] + delta_x])
 
                 case "shield":
+                    pass
 
                 case "move":
+                    pass
 
                 case "first_move":
+                    pass
 
                 case _: 
                     print ("invalid move") 
@@ -289,7 +307,7 @@ while not board.game_over:
 
     piece = board.get_piece(piece_pos)
     # check if the piece is the correct color
-    if piece == 0 or piece.color != current_color:
+    if piece == 0 or piece.color != current_color or piece.stunned == True:
         print("Invalid piece")
         continue
 
