@@ -71,6 +71,7 @@ class chesspiece():
         self.movement = movement
         self.board = board
         self.stunned = False
+        self.shielded = False
 
         self.isKing = False
         self.brittle = False
@@ -109,7 +110,7 @@ class chesspiece():
                 case "attack":
                     if target_piece.color == ("black" if self.color == "white" else "white"):
                         if self.check_path_clear(position):
-                            print(f"{self.color} {self.name} captured {target_piece.color} {target_piece.name}")
+                            print(f"{self.color} {self.name} attacked {target_piece.color} {target_piece.name}")
                             if self.color == "black":
                                 self.board.black_points += 1
                             else:
@@ -120,12 +121,13 @@ class chesspiece():
                     if target_piece != 0:
                         if self.check_path_clear(position):
                             prev_position = self.position
-                            self.move(position)
-                            target_piece.move(prev_position)
+                            board.set_piece(self, position)
+                            board.set_piece(target_piece, prev_position)
 
                 case "stun":
-                    if target_piece != 0:
+                    if target_piece != 0 and target_piece.color != self.color:
                         if self.check_path_clear(position):
+                            print(f"{self.color} {self.name} stunned {target_piece.color} {target_piece.name}")
                             target_piece.stunned = True
 
                 case "push":
@@ -141,6 +143,10 @@ class chesspiece():
                                 self.move(position)
 
                 case "shield":
+                    if target_piece != 0 and target_piece.color == self.color:
+                        if self.check_path_clear(position):
+                            print(f"{self.color} {self.name} shielded {target_piece.color} {target_piece.name}")
+                            target_piece.shielded = True
                     pass
 
                 case "move":
@@ -157,7 +163,7 @@ class chesspiece():
                 case _: 
                     print ("invalid move") 
                     return False
-
+        return True
 
 
 
