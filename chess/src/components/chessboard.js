@@ -415,20 +415,18 @@ function onPieceDragBegin(piece, square) {
       row.forEach((moveTypes, colIndex) => {
         moveTypes.forEach((moveType) => {
 
-          // flip y direction for white
-          if (piece.color === "white") {
-            rowIndex = -rowIndex;
-          }
-
-          const targetRow = piece.position[0] + rowIndex - 7; // Adjusting for offset
+           // Flip the y-direction for white pieces
+          const targetRow = piece.color === 'white'
+          ? piece.position[0] - rowIndex + 7  // Adjusting for offset
+          : piece.position[0] + rowIndex - 7; // Adjusting for offset
           const targetCol = piece.position[1] + colIndex - 7; // Adjusting for offset
           const targetPos = [targetRow, targetCol];
 
-          if(targetRow < 0 || targetRow > 7 || targetCol < 0 || targetCol > 7) return;
+          if(targetRow < 0 || targetRow > 15 || targetCol < 0 || targetCol > 15) return;
   
           if (moveType === "move" && piece.check_path_clear(targetPos)) {
             validMoves.push(convertPositionToSquare(targetPos));
-          } else if (moveType === "capture" && piece.board.get_piece(targetPos)?.color !== piece.color) {
+          } else if (moveType === "first_move" && piece.check_path_clear(targetPos)) {
             validMoves.push(convertPositionToSquare(targetPos));
           }
         });
