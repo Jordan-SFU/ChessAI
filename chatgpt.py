@@ -1,6 +1,6 @@
 import openai
 
-API_KEY = "sk-proj-4va0xZrqno7nR7jlvPMbT3BlbkFJtXXozEx7aSDyT8lTDu7K"
+API_KEY = open("apikey.txt", "r").read().strip()
 openai.api_key = API_KEY
 
 class chatManager:
