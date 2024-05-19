@@ -216,6 +216,7 @@ class chesspiece {
     this.board = board;
 
     this.captured = false;
+    this.first_move = true;
 
     // add other properties here
   }
@@ -296,6 +297,16 @@ class chesspiece {
             return true;
           }
           continue;
+        case "first_move":
+          console.log("attempting first move")
+          if (this.first_move && target_piece == null && this.check_path_clear(position[0])) {
+            console.log(`${this.color} ${this.name} moves to ${position[0]}`);
+            this.move(position[0]);
+
+            this.first_move = false;
+
+            return true;
+          }
         default:
           console.log("Invalid move type");
       }
