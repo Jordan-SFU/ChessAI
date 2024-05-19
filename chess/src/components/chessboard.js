@@ -349,8 +349,8 @@ function Menu() {
     <div className="chessboard">
       <div
         style={{
-          width: "50vh",
-          height: "50vh",
+          width: "480px",
+          height: "480px",
           display: "flex",
           justifyContent: "center",
           alignItems: "center",
@@ -375,6 +375,12 @@ function Menu() {
             onSquareClick={function noRefCheck(){}}
             onSquareRightClick={function noRefCheck(){}}
             customSquareStyles={moveSquares}
+            customBoardStyle={{
+                /* From https://css.glass */
+                opacity: 0.75,
+            }}
+            customDarkSquareStyle={{ backgroundColor: "#066B62", }}
+            customLightSquareStyle={{ backgroundColor: "#edeed1", }}
           />
         )}
       </div>
