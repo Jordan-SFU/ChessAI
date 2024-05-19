@@ -13,10 +13,12 @@ const Start = () => {
   return (
     <div className="start">
         <img src='https://i.imgur.com/P0rkW2O.png' alt='chess' className="chesslogo" />
-        <h1 className="title">Chess AI Destroys Us</h1>
+        <div className="smallcard">
+          <h1 className="title">Death by Chess</h1>
+        </div>
         <div className="button-container">
         <button class="cssbuttons-io-button" onClick = {handleButtonOnClick}>
-          Feel the Pain
+          Feel the Pain 
           <div class="icon">
             <svg
               height="24"
