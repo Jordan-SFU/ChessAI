@@ -1,10 +1,12 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './Chessboard.css';
+import PieceSettingsModal from './PieceSettingsModal';
 import PauseModal from './PauseModal';
 
 function Chessboard() {
   const [isPaused, setIsPaused] = useState(false);
+  const [isPieceSettingsOpen, setIsPieceSettingsOpen] = useState(false);
   const navigate = useNavigate();
 
   const handlePauseClick = () => {
@@ -15,8 +17,18 @@ function Chessboard() {
     setIsPaused(false);
   };
 
+  const handleResetClick = () => {
+    setIsPaused(false);
+    setIsPieceSettingsOpen(true);
+  };
+
   const handleExitClick = () => {
     navigate('/');
+  };
+
+  const handleStartGame = () => {
+    setIsPieceSettingsOpen(false);
+    // Implement the game start logic here
   };
 
   const rows = 8;
@@ -36,7 +48,17 @@ function Chessboard() {
       <div className="chessboard">
         {board}
         <button className="pause-button" onClick={handlePauseClick}>❚❚</button>
-        <PauseModal isOpen={isPaused} onClose={handleResumeClick} onExit={handleExitClick}/>
+        <PauseModal isOpen={isPaused}
+                    onClose={handleResumeClick}
+                    onReset={handleResetClick}
+                    onExit={handleExitClick}
+
+        />
+        <PieceSettingsModal
+            isOpen={isPieceSettingsOpen}
+            onClose={() => setIsPieceSettingsOpen(false)}
+            onStart={handleStartGame}
+        />
       </div>
   );
 }
