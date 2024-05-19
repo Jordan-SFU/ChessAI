@@ -255,8 +255,19 @@ function Menu() {
 
   // Callbacks
   function onPieceDragBegin(piece, square) {
-    //console.log("onPieceDragBegin", piece, square);
-    highlightSquares([square]);
+    const boardPiece = board.get_piece(convertSquareToPosition(square));
+    if (boardPiece) {
+      const validMoves = calculateValidMoves(boardPiece);
+      highlightSquares(validMoves);
+    }
+  }
+  
+  function onPieceClick(piece, square) {
+    const boardPiece = board.get_piece(convertSquareToPosition(square));
+    if (boardPiece) {
+      const validMoves = calculateValidMoves(boardPiece);
+      highlightSquares(validMoves);
+    }
   }
 
   function onPieceDrop(fromSquare, toSquare, piece) {
@@ -299,6 +310,32 @@ function Menu() {
     return `${num_dict[position[1]]}${position[0] + 1}`;
   }
 
+  function calculateValidMoves(piece) {
+    // NOTE -> reversed y dir for white: fix later
+
+    const validMoves = [];
+    if (!piece) return validMoves;
+  
+    // Iterate through the movement pattern of the piece
+    piece.movement.forEach((row, rowIndex) => {
+      row.forEach((moveTypes, colIndex) => {
+        moveTypes.forEach((moveType) => {
+          const targetRow = piece.position[0] + rowIndex - 3; // Adjusting for offset
+          const targetCol = piece.position[1] + colIndex - 3; // Adjusting for offset
+          const targetPos = [targetRow, targetCol];
+  
+          if (moveType === "move" && piece.check_path_clear(targetPos)) {
+            validMoves.push(convertPositionToSquare(targetPos));
+          } else if (moveType === "capture" && piece.board.get_piece(targetPos)?.color !== piece.color) {
+            validMoves.push(convertPositionToSquare(targetPos));
+          }
+        });
+      });
+    });
+  
+    return validMoves;
+  }
+
   function highlightSquares(squares) {
     const highlightStyle = { backgroundColor: 'rgba(255, 255, 0, 0.5)' };
     const newMoveSquares = squares.reduce((acc, square) => {
@@ -329,7 +366,7 @@ function Menu() {
             onDragOverSquare={function noRefCheck(){}}
             onMouseOutSquare={function noRefCheck(){}}
             onMouseOverSquare={function noRefCheck(){}}
-            onPieceClick={function noRefCheck(){}}
+            onPieceClick={onPieceClick}
             onPieceDragBegin={onPieceDragBegin}
             onPieceDragEnd={function noRefCheck(){}}
             onPieceDrop={onPieceDrop}
