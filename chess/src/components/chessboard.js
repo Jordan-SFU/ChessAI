@@ -12,12 +12,14 @@ function Menu() {
   const [isPieceSettingsOpen, setIsPieceSettingsOpen] = useState(false);
   const [board, setBoard] = useState(null);
   const [moveSquares, setMoveSquares] = useState({});
+  const [isLoading, setIsLoading] = useState(true);
   const navigate = useNavigate();
 
   useEffect(() => {
     const initialBoard = new chessboard();
     initialBoard.initialize();
     setBoard(initialBoard);
+    setIsLoading(false);
   }, []);
 
   const handlePauseClick = () => {
@@ -157,7 +159,7 @@ function Menu() {
         for (var j = 0; j < 8; j++) {
           var piece = this.board[i][j];
           if (piece != null) {
-            board_dict[convertPositionToSquare([i, j])] = piece.color[0] + piece.name[0];
+            board_dict[convertPositionToSquare([i, j])] = piece.color[0] + piece.name[0].toUpperCase();
           }
         }
       }
@@ -317,23 +319,27 @@ function Menu() {
           alignItems: "center",
         }}
       >
-        <Chessboard
-          id="Configurable Board"
-          position={board ? board.get_board() : {}}
-          onArrowsChange={function noRefCheck(){}}
-          onDragOverSquare={function noRefCheck(){}}
-          onMouseOutSquare={function noRefCheck(){}}
-          onMouseOverSquare={function noRefCheck(){}}
-          onPieceClick={function noRefCheck(){}}
-          onPieceDragBegin={onPieceDragBegin}
-          onPieceDragEnd={function noRefCheck(){}}
-          onPieceDrop={onPieceDrop}
-          onPromotionCheck={function noRefCheck(){}}
-          onPromotionPieceSelect={function noRefCheck(){}}
-          onSquareClick={function noRefCheck(){}}
-          onSquareRightClick={function noRefCheck(){}}
-          customSquareStyles={moveSquares}
-        />
+        {isLoading ? (
+          <div>Loading...</div> // Show a loading message or spinner while the board is loading
+        ) : (
+          <Chessboard
+            id="Configurable Board"
+            position={board.get_board()}
+            onArrowsChange={function noRefCheck(){}}
+            onDragOverSquare={function noRefCheck(){}}
+            onMouseOutSquare={function noRefCheck(){}}
+            onMouseOverSquare={function noRefCheck(){}}
+            onPieceClick={function noRefCheck(){}}
+            onPieceDragBegin={onPieceDragBegin}
+            onPieceDragEnd={function noRefCheck(){}}
+            onPieceDrop={onPieceDrop}
+            onPromotionCheck={function noRefCheck(){}}
+            onPromotionPieceSelect={function noRefCheck(){}}
+            onSquareClick={function noRefCheck(){}}
+            onSquareRightClick={function noRefCheck(){}}
+            customSquareStyles={moveSquares}
+          />
+        )}
       </div>
       <button className="pause-button" onClick={handlePauseClick}>❚❚</button>
       <PauseModal
