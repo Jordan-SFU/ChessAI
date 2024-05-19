@@ -8,9 +8,14 @@ class chessboard():
         self.black_points = 0
         self.game_over = False
         self.winner = None
+        self.turn_count = 0
+
+    def get_turn_count(self):
+        return int(self.turn_count / 2)
 
     def set_piece(self, piece, position):
         self.board[position[0]][position[1]] = piece
+        return piece
 
     def get_piece(self, position):
         return self.board[position[0]][position[1]]
@@ -21,7 +26,7 @@ class chessboard():
         self.set_piece(chesspiece("night", "white", [0, 1], knight_movement, self), [0, 1])
         self.set_piece(chesspiece("bishop", "white", [0, 2], bishop_movement, self), [0, 2])
         self.set_piece(chesspiece("queen", "white", [0, 3], queen_movement, self), [0, 3])
-        self.set_piece(chesspiece("king", "white", [0, 4], king_movement, self), [0, 4])
+        self.set_piece(chesspiece("king", "white", [0, 4], king_movement, self), [0, 4]).isKing = True
         self.set_piece(chesspiece("bishop", "white", [0, 5], bishop_movement, self), [0, 5])
         self.set_piece(chesspiece("night", "white", [0, 6], knight_movement, self), [0, 6])
         self.set_piece(chesspiece("rook", "white", [0, 7], rook_movement, self), [0, 7])
@@ -33,7 +38,7 @@ class chessboard():
         self.set_piece(chesspiece("night", "black", [7, 1], knight_movement, self), [7, 1])
         self.set_piece(chesspiece("bishop", "black", [7, 2], bishop_movement, self), [7, 2])
         self.set_piece(chesspiece("queen", "black", [7, 3], queen_movement, self), [7, 3])
-        self.set_piece(chesspiece("king", "black", [7, 4], king_movement, self), [7, 4])
+        self.set_piece(chesspiece("king", "black", [7, 4], king_movement, self), [7, 4]).isKing = True
         self.set_piece(chesspiece("bishop", "black", [7, 5], bishop_movement, self), [7, 5])
         self.set_piece(chesspiece("night", "black", [7, 6], knight_movement, self), [7, 6])
         self.set_piece(chesspiece("rook", "black", [7, 7], rook_movement, self), [7, 7])
@@ -66,6 +71,10 @@ class chesspiece():
         self.movement = movement
         self.board = board
         self.stunned = False
+
+        self.isKing = False
+        self.brittle = False
+        self.splash = False
 
     def move(self, position):
         # update position on board
@@ -135,10 +144,15 @@ class chesspiece():
                     pass
 
                 case "move":
-                    pass
+                    if target_piece == 0:
+                        if self.check_path_clear(position):
+                            self.move(position)
 
                 case "first_move":
-                    pass
+                    if board.get_turn_count() == 0:
+                        if target_piece == 0:
+                            if self.check_path_clear(position):
+                                self.move(position)
 
                 case _: 
                     print ("invalid move") 
@@ -200,7 +214,7 @@ class chesspiece():
                                 self.board.white_points += 1
 
                             # Check if the captured piece is a king
-                            if target_piece.name == "king":
+                            if target_piece.isKing == True:
                                 self.board.game_over = True
                                 self.board.winner = self.color
 
@@ -239,7 +253,7 @@ class chesspiece():
 # Define movements for each piece using nested array
 pawn_movement = [
     [[], [], [], [], [], [], []],
-    [[], [], [], [], [], [], []],
+    [[], [], [], ["first_move"], [], [], []],
     [[], [], ["capture"], ["move"], ["capture"], [], []],
     [[], [], [], [], [], [], []],
     [[], [], [], [], [], [], []],
@@ -278,13 +292,13 @@ bishop_movement = [
 ]
 
 queen_movement = [
-    [["move"], [], [], ["move"], [], [], ["move"]],
-    [[], ["move"], [], ["move"], [], ["move"], []],
-    [[], [], ["move"], ["move"], ["move"], [], []],
-    [["move"], ["move"], ["move"], [], ["move"], ["move"], ["move"]],
-    [[], [], ["move"], ["move"], ["move"], [], []],
-    [[], ["move"], [], ["move"], [], ["move"], []],
-    [["move"], [], [], ["move"], [], [], ["move"]],
+    [["move", "capture"], [], [], ["move", "capture"], [], [], ["move", "capture"]],
+    [[], ["move", "capture"], [], ["move", "capture"], [], ["move", "capture"], []],
+    [[], [], ["move", "capture"], ["move", "capture"], ["move", "capture"], [], []],
+    [["move", "capture"], ["move", "capture"], ["move", "capture"], [], ["move", "capture"], ["move", "capture"], ["move", "capture"]],
+    [[], [], ["move", "capture"], ["move", "capture"], ["move", "capture"], [], []],
+    [[], ["move", "capture"], [], ["move", "capture"], [], ["move", "capture"], []],
+    [["move", "capture"], [], [], ["move", "capture"], [], [], ["move", "capture"]],
 ]
 
 king_movement = [
@@ -309,6 +323,7 @@ while not board.game_over:
     board.display_board()
 
     print("Current turn: ", current_color)
+    print("Turn #: ", board.get_turn_count())
     print("Black points: ", board.black_points)
     print("White points: ", board.white_points)
     print("")
@@ -332,4 +347,5 @@ while not board.game_over:
         print(f"Game over! {board.winner.capitalize()} wins!")
         break
 
+    board.turn_count += 1
     current_color = "black" if current_color == "white" else "white"
