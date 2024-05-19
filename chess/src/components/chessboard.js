@@ -45,7 +45,29 @@ function Menu() {
   return (
     
       <div className="chessboard">
-        <Chessboard id="BasicBoard" />
+        <div
+          style={{
+            margin: '3rem auto',
+            maxWidth: '70vh',
+            width: '70vw'
+          }}
+        >
+          <Chessboard
+            id="Configurable Board"
+            onArrowsChange={function noRefCheck(){}}
+            onDragOverSquare={function noRefCheck(){}}
+            onMouseOutSquare={function noRefCheck(){}}
+            onMouseOverSquare={function noRefCheck(){}}
+            onPieceClick={function noRefCheck(){}}
+            onPieceDragBegin={function noRefCheck(){}}
+            onPieceDragEnd={function noRefCheck(){}}
+            onPieceDrop={function noRefCheck(){}}
+            onPromotionCheck={function noRefCheck(){}}
+            onPromotionPieceSelect={function noRefCheck(){}}
+            onSquareClick={function noRefCheck(){}}
+            onSquareRightClick={function noRefCheck(){}}
+          />
+        </div>
         <button className="pause-button" onClick={handlePauseClick}>❚❚</button>
         <PauseModal isOpen={isPaused}
                     onClose={handleResumeClick}
