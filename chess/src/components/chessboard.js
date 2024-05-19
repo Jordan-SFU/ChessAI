@@ -266,6 +266,11 @@ class chesspiece {
 
     var target_piece = this.board.get_piece(position[0]);
 
+    // check if the target pos is within the movement pattern
+    if (rel_pos[0] + 3 < 0 || rel_pos[0] + 3 > 6 || rel_pos[1] + 3 < 0 || rel_pos[1] + 3 > 6) {
+      return false;
+    }
+
     for (var moveType of this.movement[rel_pos[0] + 3][rel_pos[1] + 3]) {
       console.log(this.movement[rel_pos[0] + 3][rel_pos[1] + 3]);
       switch (moveType) {
