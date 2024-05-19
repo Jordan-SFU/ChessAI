@@ -23,7 +23,7 @@
   font-size: calc(10px + 2vmin);
   color: white;
   height: 100%;
-  background: linear-gradient(290deg, #3f5efb, #fc466b, #1533c5, #f11843);
+  background: linear-gradient(290deg, #3f5efb, #e640e0, #3791e4, #da41df);
   background-size: 240% 240%;
   animation: gradient-animation 15s ease infinite;
 }
