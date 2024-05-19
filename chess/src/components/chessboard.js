@@ -3,9 +3,11 @@ import { useNavigate } from 'react-router-dom';
 import './Chessboard.css';
 import PieceSettingsModal from './PieceSettingsModal';
 import PauseModal from './PauseModal';
+import About from './About';
 
 function Chessboard() {
   const [isPaused, setIsPaused] = useState(false);
+  const [isAbout, setIsAbout] = useState(false);
   const [isPieceSettingsOpen, setIsPieceSettingsOpen] = useState(false);
   const navigate = useNavigate();
 
@@ -22,9 +24,16 @@ function Chessboard() {
     setIsPieceSettingsOpen(true);
   };
 
+  const handleAboutClick = () => {
+    setIsAbout(true);
+    setIsPaused(false);
+  };
+
+
   const handleExitClick = () => {
     navigate('/');
   };
+
 
   const handleStartGame = () => {
     setIsPieceSettingsOpen(false);
@@ -51,6 +60,7 @@ function Chessboard() {
         <PauseModal isOpen={isPaused}
                     onClose={handleResumeClick}
                     onReset={handleResetClick}
+                    onAbout={handleAboutClick}
                     onExit={handleExitClick}
 
         />
@@ -59,6 +69,11 @@ function Chessboard() {
             onClose={() => setIsPieceSettingsOpen(false)}
             onStart={handleStartGame}
         />
+        <About
+            isOpen = {isAbout}
+            onClose={() =>setIsAbout(false)}
+
+          />
       </div>
   );
 }
