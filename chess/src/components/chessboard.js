@@ -42,6 +42,14 @@ function Menu() {
     // Implement the game start logic here
   };
 
+  function onPieceDragBegin(piece, square) {
+    console.log("onPieceDragBegin", piece, square);
+  }
+
+  function onPieceDrop(piece, fromSquare, toSquare, dropResult) {
+    console.log("onPieceDrop", piece, fromSquare, toSquare, dropResult);
+  }
+
   return (
     
       <div className="chessboard">
@@ -61,9 +69,9 @@ function Menu() {
             onMouseOutSquare={function noRefCheck(){}}
             onMouseOverSquare={function noRefCheck(){}}
             onPieceClick={function noRefCheck(){}}
-            onPieceDragBegin={function noRefCheck(){}}
+            onPieceDragBegin={onPieceDragBegin}
             onPieceDragEnd={function noRefCheck(){}}
-            onPieceDrop={function noRefCheck(){}}
+            onPieceDrop={onPieceDrop}
             onPromotionCheck={function noRefCheck(){}}
             onPromotionPieceSelect={function noRefCheck(){}}
             onSquareClick={function noRefCheck(){}}
