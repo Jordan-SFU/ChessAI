@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './Chessboard.css';
 import PieceSettingsModal from './PieceSettingsModal';
@@ -447,6 +447,40 @@ function onPieceDragBegin(piece, square) {
     setMoveSquares(newMoveSquares);
   }
 
+  const pieces = [
+    "wP",
+    "wN",
+    "wB",
+    "wR",
+    "wQ",
+    "wK",
+    "bP",
+    "bN",
+    "bB",
+    "bR",
+    "bQ",
+    "bK",
+  ];
+
+  const customPieces = useMemo(() => {
+    const pieceComponents = {};
+    pieces.forEach((piece) => {
+      const imageSrc = require(`./pieces/${piece}.png`);
+      pieceComponents[piece] = ({ squareWidth }) => (
+        <div
+          style={{
+            width: squareWidth * 0.98,
+            height: squareWidth * 0.98,
+            backgroundImage: `url(${imageSrc})`,
+            backgroundSize: "98%",
+            backgroundRepeat: 'no-repeat'
+          }}
+        />
+      );
+    });
+    return pieceComponents;
+  }, []);
+
   return (
     <div className="chessboard">
       {winner && <WinLoseScreen winner={winner} onRestart={handleStartGame} />}
@@ -454,9 +488,7 @@ function onPieceDragBegin(piece, square) {
         style={{
           width: "480px",
           height: "480px",
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
+
         }}
       >
         {isLoading ? (
@@ -469,10 +501,10 @@ function onPieceDragBegin(piece, square) {
             onDragOverSquare={function noRefCheck(){}}
             onMouseOutSquare={function noRefCheck(){}}
             onMouseOverSquare={function noRefCheck(){}}
-            onPieceClick={onPieceClick}
-            onPieceDragBegin={onPieceDragBegin}
+            onPieceClick={onPieceClick} /* onPieceClick */
+            onPieceDragBegin={onPieceDragBegin} /* onPieceDragBegin */
             onPieceDragEnd={function noRefCheck(){}}
-            onPieceDrop={onPieceDrop}
+            onPieceDrop={onPieceDrop} /* onPieceDrop */
             onPromotionCheck={function noRefCheck(){}}
             onPromotionPieceSelect={function noRefCheck(){}}
             onSquareClick={function noRefCheck(){}}
@@ -481,10 +513,14 @@ function onPieceDragBegin(piece, square) {
             customSquareStyles={moveSquares}
             customBoardStyle={{
                 /* From https://css.glass */
-                opacity: 0.75,
+                opacity: 0.9,
             }}
-            customDarkSquareStyle={{ backgroundColor: "#066B62", }}
-            customLightSquareStyle={{ backgroundColor: "#edeed1", }}
+            customDarkSquareStyle={{ backgroundImage: "url('https://pacacc.org/wp-content/uploads/2021/05/2114880_gray-semi-transparent-grey-box-hd-png-download.png')",}}
+            customLightSquareStyle={{ backgroundImage: "url('https://red8interactive-website-images.s3.us-west-2.amazonaws.com/wp-content/uploads/2020/04/24191653/White-Translucent-Background-50.png')", }}
+            customNotationStyle={{
+              opacity: 0,
+            }}
+            customPieces={customPieces}
           />
         )}
       </div>
