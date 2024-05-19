@@ -4,10 +4,8 @@ import './Chessboard.css';
 import PieceSettingsModal from './PieceSettingsModal';
 import PauseModal from './PauseModal';
 import About from './About';
-import { Chessboard } from "react-chessboard";
 
-
-function Menu() {
+function Chessboard() {
   const [isPaused, setIsPaused] = useState(false);
   const [isAbout, setIsAbout] = useState(false);
   const [isPieceSettingsOpen, setIsPieceSettingsOpen] = useState(false);
@@ -42,16 +40,29 @@ function Menu() {
     // Implement the game start logic here
   };
 
+  const rows = 8;
+  const cols = 8;
+  const board = [];
+
+  // Generate board
+  for (let row = 0; row < rows; row++) {
+    for (let col = 0; col < cols; col++) {
+      // Determine if the square is light or dark
+      const isDark = (row + col) % 2 === 1;
+      board.push(<Square key={`${row}-${col}`} isDark={isDark} />);
+    }
+  }
+
   return (
-    
       <div className="chessboard">
-        <Chessboard id="BasicBoard" />
+        {board}
         <button className="pause-button" onClick={handlePauseClick}>❚❚</button>
         <PauseModal isOpen={isPaused}
                     onClose={handleResumeClick}
                     onReset={handleResetClick}
                     onAbout={handleAboutClick}
                     onExit={handleExitClick}
+
         />
         <PieceSettingsModal
             isOpen={isPieceSettingsOpen}
@@ -61,11 +72,19 @@ function Menu() {
         <About
             isOpen = {isAbout}
             onClose={() =>setIsAbout(false)}
+
           />
-        
       </div>
-      
   );
 }
 
-export default Menu;
+function Square({isDark}) {
+  const className = isDark ? 'square dark' : 'square light';
+  return (
+
+      <div className={className}/>
+)
+  ;
+}
+
+export default Chessboard;
