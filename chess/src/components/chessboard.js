@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './Chessboard.css';
 import PieceSettingsModal from './PieceSettingsModal';
@@ -10,7 +10,15 @@ function Menu() {
   const [isPaused, setIsPaused] = useState(false);
   const [isAbout, setIsAbout] = useState(false);
   const [isPieceSettingsOpen, setIsPieceSettingsOpen] = useState(false);
+  const [board, setBoard] = useState(null);
+  const [moveSquares, setMoveSquares] = useState({});
   const navigate = useNavigate();
+
+  useEffect(() => {
+    const initialBoard = new chessboard();
+    initialBoard.initialize();
+    setBoard(initialBoard);
+  }, []);
 
   const handlePauseClick = () => {
     setIsPaused(true);
@@ -141,9 +149,24 @@ function Menu() {
     get_piece(position){
       return this.board[position[0]][position[1]] || null;
     }
-  }
 
-  var board = new chessboard();
+    get_board(){
+      // convert board to dict of position: piece; i.e. {"a1": "bR", "b1": "bN", ...}
+      var board_dict = {};
+      for (var i = 0; i < 8; i++) {
+        for (var j = 0; j < 8; j++) {
+          var piece = this.board[i][j];
+          if (piece != null) {
+            board_dict[convertPositionToSquare([i, j])] = piece.color[0] + piece.name[0];
+          }
+        }
+      }
+
+      console.log(board_dict);
+      return board_dict;
+
+    }
+  }
 
   class chesspiece {
     constructor(name, color, position, movement, board) {
@@ -228,11 +251,6 @@ function Menu() {
     }
   }
 
-  board.initialize();
-
-  // useStates
-  const [moveSquares, setMoveSquares] = useState({});
-
   // Callbacks
   function onPieceDragBegin(piece, square) {
     //console.log("onPieceDragBegin", piece, square);
@@ -265,6 +283,20 @@ function Menu() {
     return [parseInt(square[1]) - 1, char_dict[square[0]]];
   }
 
+  function convertPositionToSquare(position) {
+    const num_dict = {
+      0: "a",
+      1: "b",
+      2: "c",
+      3: "d",
+      4: "e",
+      5: "f",
+      6: "g",
+      7: "h"
+    }
+    return `${num_dict[position[1]]}${position[0] + 1}`;
+  }
+
   function highlightSquares(squares) {
     const highlightStyle = { backgroundColor: 'rgba(255, 255, 0, 0.5)' };
     const newMoveSquares = squares.reduce((acc, square) => {
@@ -287,6 +319,7 @@ function Menu() {
       >
         <Chessboard
           id="Configurable Board"
+          position={board ? board.get_board() : {}}
           onArrowsChange={function noRefCheck(){}}
           onDragOverSquare={function noRefCheck(){}}
           onMouseOutSquare={function noRefCheck(){}}
