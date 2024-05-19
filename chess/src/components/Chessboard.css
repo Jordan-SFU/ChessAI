@@ -28,3 +28,25 @@
   backdrop-filter: blur(16.1px);
   -webkit-backdrop-filter: blur(16.1px);
   }
+
+.pause-button {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    width: 40px;
+    height: 40px;
+    background-color: dimgrey;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 22px;
+    font-weight: bold;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.pause-button:hover {
+    background-color: darkgray;
+}

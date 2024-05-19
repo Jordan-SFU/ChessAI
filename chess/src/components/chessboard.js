@@ -1,7 +1,24 @@
-import React from 'react';
+import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import './Chessboard.css';
+import PauseModal from './PauseModal';
 
 function Chessboard() {
+  const [isPaused, setIsPaused] = useState(false);
+  const navigate = useNavigate();
+
+  const handlePauseClick = () => {
+    setIsPaused(true);
+  };
+
+  const handleResumeClick = () => {
+    setIsPaused(false);
+  };
+
+  const handleExitClick = () => {
+    navigate('/');
+  };
+
   const rows = 8;
   const cols = 8;
   const board = [];
@@ -16,17 +33,21 @@ function Chessboard() {
   }
 
   return (
-    <div className="chessboard">
-      {board}
-    </div>
+      <div className="chessboard">
+        {board}
+        <button className="pause-button" onClick={handlePauseClick}>❚❚</button>
+        <PauseModal isOpen={isPaused} onClose={handleResumeClick} onExit={handleExitClick}/>
+      </div>
   );
 }
 
-function Square({ isDark }) {
+function Square({isDark}) {
   const className = isDark ? 'square dark' : 'square light';
   return (
-    <div className={className} />
-  );
+
+      <div className={className}/>
+)
+  ;
 }
 
 export default Chessboard;
