@@ -76,6 +76,11 @@ class chesspiece():
         self.isKing = False
         self.brittle = False
         self.splash = False
+        self.castler = False
+        self.multi = False
+        self.backstabber = False
+        self.looper = False
+        self.tall = False
 
     def move(self, position):
         # update position on board
@@ -173,71 +178,73 @@ class chesspiece():
 
 
 
-    def check_if_valid(self, position):
-        # Check if the target position is within the bounds of the board
-        if not (0 <= position[0] < 8 and 0 <= position[1] < 8):
-            return False
+    # def check_if_valid(self, position):
+    #     # Check if the target position is within the bounds of the board
+    #     if not (0 <= position[0] < 8 and 0 <= position[1] < 8):
+    #         return False
 
-        # Get relative position
-        relative_position = [position[0] - self.position[0], position[1] - self.position[1]]
+    #     # Get relative position
+    #     relative_position = [position[0] - self.position[0], position[1] - self.position[1]]
 
-        # Check if the target tile is empty
-        target_piece = self.board.get_piece(position)
+    #     # Check if the target tile is empty
+    #     target_piece = self.board.get_piece(position)
 
-        # Check if the movement is valid
-        if target_piece == 0:
-            # Check if there are obstructions along the movement path
-            if self.color == "black":
-                if "move" in self.movement[relative_position[0] + 3][relative_position[1] + 3]:
-                    if self.check_path_clear(position):
-                        return True
-                return False
-            else:
-                # maybe the second - shouldne be terhere
-                if "move" in self.movement[-relative_position[0] + 3][-relative_position[1] + 3]:
-                    if self.check_path_clear(position):
-                        return True
-                return False
-        else:
-            # Check if the movement is a valid capture
-            if target_piece.color != self.color:
-                if self.color == "black":
-                    if "capture" in self.movement[relative_position[0] + 3][relative_position[1] + 3]:
-                        if self.check_path_clear(position):
-                            print(f"{self.color} {self.name} captured {target_piece.color} {target_piece.name}")
-                            if self.color == "black":
-                                self.board.black_points += 1
-                            else:
-                                self.board.white_points += 1
+    #     # Check if the movement is valid
+    #     if target_piece == 0:
+    #         # Check if there are obstructions along the movement path
+    #         if self.color == "black":
+    #             if "move" in self.movement[relative_position[0] + 3][relative_position[1] + 3]:
+    #                 if self.check_path_clear(position):
+    #                     return True
+    #             return False
+    #         else:
+    #             # maybe the second - shouldne be terhere
+    #             if "move" in self.movement[-relative_position[0] + 3][-relative_position[1] + 3]:
+    #                 if self.check_path_clear(position):
+    #                     return True
+    #             return False
+    #     else:
+    #         # Check if the movement is a valid capture
+    #         if target_piece.color != self.color:
+    #             if self.color == "black":
+    #                 if "capture" in self.movement[relative_position[0] + 3][relative_position[1] + 3]:
+    #                     if self.check_path_clear(position):
+    #                         print(f"{self.color} {self.name} captured {target_piece.color} {target_piece.name}")
+    #                         if self.color == "black":
+    #                             self.board.black_points += 1
+    #                         else:
+    #                             self.board.white_points += 1
 
-                            # Check if the captured piece is a king
-                            if target_piece.name == "king":
-                                self.board.game_over = True
-                                self.board.winner = self.color
+    #                         # Check if the captured piece is a king
+    #                         if target_piece.name == "king":
+    #                             self.board.game_over = True
+    #                             self.board.winner = self.color
 
-                            return True
-                else:
-                    if "capture" in self.movement[-relative_position[0] + 3][-relative_position[1] + 3]:
-                        if self.check_path_clear(position):
-                            print(f"{self.color} {self.name} captured {target_piece.color} {target_piece.name}")
-                            if self.color == "black":
-                                self.board.black_points += 1
-                            else:
-                                self.board.white_points += 1
+    #                         return True
+    #             else:
+    #                 if "capture" in self.movement[-relative_position[0] + 3][-relative_position[1] + 3]:
+    #                     if self.check_path_clear(position):
+    #                         print(f"{self.color} {self.name} captured {target_piece.color} {target_piece.name}")
+    #                         if self.color == "black":
+    #                             self.board.black_points += 1
+    #                         else:
+    #                             self.board.white_points += 1
 
-                            # Check if the captured piece is a king
-                            if target_piece.isKing == True:
-                                self.board.game_over = True
-                                self.board.winner = self.color
+    #                         # Check if the captured piece is a king
+    #                         if target_piece.isKing == True:
+    #                             self.board.game_over = True
+    #                             self.board.winner = self.color
 
-                            return True
+    #                         return True
 
-            return False
+    #         return False
+        
 #redo this dumass
     def check_path_clear(self, target_position):
         # Get the direction of movement
         delta_x = 1 if target_position[1] > self.position[1] else (-1 if target_position[1] < self.position[1] else 0)
         delta_y = 1 if target_position[0] > self.position[0] else (-1 if target_position[0] < self.position[0] else 0)
+        if board.get_piece(self.position[0]+delta_x, 
 
         # Traverse the path from current position to target position
         x, y = self.position[1] + delta_x, self.position[0] + delta_y
