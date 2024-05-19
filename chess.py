@@ -65,19 +65,63 @@ class chesspiece():
 
     def move(self, position):
         # update position on board
-        if self.check_if_valid(position):
-            self.board.set_piece(0, self.position)
-            self.position = position
-            self.board.set_piece(self, position)
-            
-            # Check for promotion
-            if self.name == "pawn" and (position[0] == 0 or position[0] == 7):
-                self.promote()
-
-            return True
-        else:
-            return False
+        self.board.set_piece(0, self.position)
+        self.position = position
+        self.board.set_piece(self, position)
         
+        # Check for promotion
+        if self.name == "pawn" and (position[0] == 0 or position[0] == 7):
+            self.promote()
+
+    def tileable(self, position):
+        # Check if the target position is within the bounds of the board
+        if not (0 <= position[0] < 8 and 0 <= position[1] < 8):
+            return False
+        relative_position = [(position[0] - self.position[0]) * (1 if self.color == "black" else -1), position[1] - self.position[1]]
+        target_piece = self.board.get_piece(position)
+
+        for moveType in self.movement[relative_position[0] + 3][relative_position[1] + 3]:
+            match moveType:
+                case "capture":
+                    #check if valid capture
+                    if target_piece.color == ("black" if self.color == "white" else "white"):
+                        if self.check_path_clear(position):
+                            print(f"{self.color} {self.name} captured {target_piece.color} {target_piece.name}")
+                            if self.color == "black":
+                                self.board.black_points += 1
+                            else:
+                                self.board.white_points += 1
+                            self.move(position);
+                            
+                case "attack":
+                    if target_piece.color == ("black" if self.color == "white" else "white"):
+                        if self.check_path_clear(position):
+                            print(f"{self.color} {self.name} captured {target_piece.color} {target_piece.name}")
+                            if self.color == "black":
+                                self.board.black_points += 1
+                            else:
+                                self.board.white_points += 1
+                            self.board.set_piece(0, self.position)
+                
+                case "swap":
+
+                case "stun":
+
+                case "push":
+
+                case "shield":
+
+                case "move":
+
+                case "first_move":
+
+                case _: 
+                    print ("invalid move") 
+                    return False
+
+
+
+
     def check_if_valid(self, position):
         # Check if the target position is within the bounds of the board
         if not (0 <= position[0] < 8 and 0 <= position[1] < 8):
@@ -98,17 +142,18 @@ class chesspiece():
                         return True
                 return False
             else:
+                # maybe the second - shouldne be terhere
                 if "move" in self.movement[-relative_position[0] + 3][-relative_position[1] + 3]:
                     if self.check_path_clear(position):
                         return True
                 return False
         else:
-            # Check if the movement is a valid attack
+            # Check if the movement is a valid capture
             if target_piece.color != self.color:
                 if self.color == "black":
-                    if "attack" in self.movement[relative_position[0] + 3][relative_position[1] + 3]:
+                    if "capture" in self.movement[relative_position[0] + 3][relative_position[1] + 3]:
                         if self.check_path_clear(position):
-                            print(f"{self.color} {self.name} attacked {target_piece.color} {target_piece.name}")
+                            print(f"{self.color} {self.name} captured {target_piece.color} {target_piece.name}")
                             if self.color == "black":
                                 self.board.black_points += 1
                             else:
@@ -121,9 +166,9 @@ class chesspiece():
 
                             return True
                 else:
-                    if "attack" in self.movement[-relative_position[0] + 3][-relative_position[1] + 3]:
+                    if "capture" in self.movement[-relative_position[0] + 3][-relative_position[1] + 3]:
                         if self.check_path_clear(position):
-                            print(f"{self.color} {self.name} attacked {target_piece.color} {target_piece.name}")
+                            print(f"{self.color} {self.name} captured {target_piece.color} {target_piece.name}")
                             if self.color == "black":
                                 self.board.black_points += 1
                             else:
@@ -137,7 +182,7 @@ class chesspiece():
                             return True
 
             return False
-
+#redo this dumass
     def check_path_clear(self, target_position):
         # Get the direction of movement
         delta_x = 1 if target_position[1] > self.position[1] else (-1 if target_position[1] < self.position[1] else 0)
@@ -170,7 +215,7 @@ class chesspiece():
 pawn_movement = [
     [[], [], [], [], [], [], []],
     [[], [], [], [], [], [], []],
-    [[], [], ["attack"], ["move"], ["attack"], [], []],
+    [[], [], ["capture"], ["move"], ["capture"], [], []],
     [[], [], [], [], [], [], []],
     [[], [], [], [], [], [], []],
     [[], [], [], [], [], [], []],
@@ -178,51 +223,51 @@ pawn_movement = [
 ]
 
 rook_movement = [
-    [[], [], [], ["move", "attack"], [], [], []],
-    [[], [], [], ["move", "attack"], [], [], []],
-    [[], [], [], ["move", "attack"], [], [], []],
+    [[], [], [], ["move", "capture"], [], [], []],
+    [[], [], [], ["move", "capture"], [], [], []],
+    [[], [], [], ["move", "capture"], [], [], []],
     [["move"], ["move"], ["move"], [], ["move"], ["move"], ["move"]],
-    [[], [], [], ["move", "attack"], [], [], []],
-    [[], [], [], ["move", "attack"], [], [], []],
-    [[], [], [], ["move", "attack"], [], [], []],
+    [[], [], [], ["move", "capture"], [], [], []],
+    [[], [], [], ["move", "capture"], [], [], []],
+    [[], [], [], ["move", "capture"], [], [], []],
 ]
 
 knight_movement = [
     [[], [], [], [], [], [], []],
-    [[], [], ["move", "attack"], [], ["move", "attack"], [], []],
-    [[], ["move", "attack"], [], [], [], ["move", "attack"], []],
+    [[], [], ["move", "capture"], [], ["move", "capture"], [], []],
+    [[], ["move", "capture"], [], [], [], ["move", "capture"], []],
     [[], [], [], [], [], [], []],
-    [[], ["move", "attack"], [], [], [], ["move", "attack"], []],
-    [[], [], ["move", "attack"], [], ["move", "attack"], [], []],
+    [[], ["move", "capture"], [], [], [], ["move", "capture"], []],
+    [[], [], ["move", "capture"], [], ["move", "capture"], [], []],
     [[], [], [], [], [], [], []]
 ]
 
 bishop_movement = [
-    [["move", "attack"], [], [], [], [], [], ["move", "attack"]],
-    [[], ["move", "attack"], [], [], [], ["move", "attack"], []],
-    [[], [], ["move", "attack"], [], ["move", "attack"], [], []],
+    [["move", "capture"], [], [], [], [], [], ["move", "capture"]],
+    [[], ["move", "capture"], [], [], [], ["move", "capture"], []],
+    [[], [], ["move", "capture"], [], ["move", "capture"], [], []],
     [[], [], [], [], [], [], []],
-    [[], [], ["move", "attack"], [], ["move", "attack"], [], []],
-    [[], ["move", "attack"], [], [], [], ["move", "attack"], []],
-    [["move", "attack"], [], [], [], [], [], ["move", "attack"]],
+    [[], [], ["move", "capture"], [], ["move", "capture"], [], []],
+    [[], ["move", "capture"], [], [], [], ["move", "capture"], []],
+    [["move", "capture"], [], [], [], [], [], ["move", "capture"]],
 ]
 
 queen_movement = [
-    [["move"], ["move"], ["move"], ["move"], ["move"], ["move"], ["move"]],
-    [["move"], ["move"], ["move"], ["move"], ["move"], ["move"], ["move"]],
-    [["move"], ["move"], ["move"], ["move"], ["move"], ["move"], ["move"]],
-    [["move"], ["move"], ["move"], ["move"], ["move"], ["move"], ["move"]],
-    [["move"], ["move"], ["move"], ["move"], ["move"], ["move"], ["move"]],
-    [["move"], ["move"], ["move"], ["move"], ["move"], ["move"], ["move"]],
-    [["move"], ["move"], ["move"], ["move"], ["move"], ["move"], ["move"]],
+    [["move"], [], [], ["move"], [], [], ["move"]],
+    [[], ["move"], [], ["move"], [], ["move"], []],
+    [[], [], ["move"], ["move"], ["move"], [], []],
+    [["move"], ["move"], ["move"], [], ["move"], ["move"], ["move"]],
+    [[], [], ["move"], ["move"], ["move"], [], []],
+    [[], ["move"], [], ["move"], [], ["move"], []],
+    [["move"], [], [], ["move"], [], [], ["move"]],
 ]
 
 king_movement = [
     [[], [], [], [], [], [], []],
     [[], [], [], [], [], [], []],
-    [[], [], ["move", "attack"], ["move", "attack"], ["move", "attack"], [], []],
-    [[], [], ["move", "attack"], [], ["move", "attack"], [], []],
-    [[], [], ["move", "attack"], ["move", "attack"], ["move", "attack"], [], []],
+    [[], [], ["move", "capture"], ["move", "capture"], ["move", "capture"], [], []],
+    [[], [], ["move", "capture"], [                ], ["move", "capture"], [], []],
+    [[], [], ["move", "capture"], ["move", "capture"], ["move", "capture"], [], []],
     [[], [], [], [], [], [], []],
     [[], [], [], [], [], [], []],
 ]
